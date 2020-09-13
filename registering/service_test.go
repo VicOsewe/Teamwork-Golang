@@ -1,7 +1,10 @@
 package registering
 
 import (
+	"errors"
 	"testing"
+
+	"github.com/google/uuid"
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
@@ -17,9 +20,9 @@ type RegisteringTestSuite struct {
 	repo    *mockUserRepo
 }
 
-func (m *mockUserRepo) CreateUser(user Users) error {
+func (m *mockUserRepo) CreateUser(user Users) (uuid.UUID, error) {
 	args := m.Called(user)
-	return args.Error(0)
+	return args.Get(0).(uuid.UUID), args.Error(1)
 }
 
 func (s *RegisteringTestSuite) SetupTest() {
@@ -38,8 +41,9 @@ func TestRegisteringService(t *testing.T) {
 func (s *RegisteringTestSuite) TestUserCreationSuccess() {
 	user := fakeUserInfo()
 
-	s.repo.On("CreateUser", mock.Anything).Return(nil)
-	err := s.service.CreateUser(user)
+	uuid := uuid.New()
+	s.repo.On("CreateUser", mock.Anything).Return(uuid, nil)
+	_, err := s.service.CreateUser(user)
 	// assert the CDS returned a nil error
 	s.Nil(err)
 	s.repo.AssertCalled(s.T(), "CreateUser", user)
@@ -51,10 +55,21 @@ func (s *RegisteringTestSuite) TestUserCreationFailure() {
 	userInfo.Firstname = ""
 	userInfo.Lastname = ""
 
-	err := s.service.CreateUser(userInfo)
+	_, err := s.service.CreateUser(userInfo)
 	s.NotNil(err)
 	s.repo.AssertNotCalled(s.T(), "CreateUser", userInfo)
 
+}
+
+func (s *RegisteringTestSuite) TestCreateUserDatabaseFailure() {
+	user := fakeUserInfo()
+
+	uuid := uuid.New()
+	s.repo.On("CreateUser", mock.Anything).Return(uuid, errors.New("database error"))
+	_, err := s.service.CreateUser(user)
+	// assert the CDS returned a nil error
+	s.NotNil(err)
+	s.repo.AssertCalled(s.T(), "CreateUser", user)
 }
 
 func fakeUserInfo() Users {

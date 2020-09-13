@@ -12,18 +12,20 @@ func CreateUser(service registering.RegisterService) func(w http.ResponseWriter,
 		user := registering.Users{}
 		// read the request body into byte slice
 		requestBody, _ := ioutil.ReadAll(r.Body)
-		// parse the body into the sites slice, handle any errors
+		// parse the body into the user slice, handle any errors
 		if err := json.Unmarshal(requestBody, &user); err != nil {
 			writeError(w, err, string(requestBody))
 			return
 		}
-		// send sites slice to the registering service, handle any errors
-		if err := service.CreateUser(user); err != nil {
+		// send user slice to the registering service, handle any errors
+		UserID, err := service.CreateUser(user)
+		if err != nil {
 			writeError(w, err, user)
 			return
 		}
+
 		// write a success response back to the originating service
-		var response = operationResponse{"SUCCESS", "sites registered to database", make([]string, 0)}
+		var response = operationResponse{"SUCCESS", "user account successfully", UserID, make([]string, 0)}
 		writeJSON(w, response)
 	}
 }

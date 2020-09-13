@@ -6,12 +6,15 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/muhoro/log"
 )
 
 type operationResponse struct {
 	Status  string
 	Message string
+	UserID  uuid.UUID
 	Errors  []string
 }
 
