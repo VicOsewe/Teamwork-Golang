@@ -2,6 +2,7 @@ package registering
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/google/uuid"
@@ -38,17 +39,19 @@ func NewRegisteringService(r RegisterRepository) RegisterService {
 }
 
 func (s *service) CreateUser(user Users) (userID uuid.UUID, erro error) {
-	regError := RegisteringError{}
+	var regError RegisteringError
 	err := s.validateUserInfo(user)
 	if err != nil {
 		regError.add("Invalid user info" + err.Error())
 		return uuid.Nil, &regError
 	}
 	UserID, errUser := s.repo.CreateUser(user)
+	fmt.Println(errUser)
 	if errUser != nil {
-		regError.add("Failed to add user to the database" + err.Error())
-		return uuid.Nil, &regError
+		regError.add("user not registered in database")
+		return UserID, &regError
 	}
+
 	return UserID, nil
 
 }
