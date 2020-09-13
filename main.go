@@ -15,12 +15,10 @@ import (
 
 func main() {
 
-	db, err := gorm.Open("postgres", "host=db port=5432 user=postgres dbname=postgres sslmode=disable password=postgres")
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=teamwork sslmode=disable password=felixotieno")
 
 	if err != nil {
-
-		panic("failed to connect database")
-
+		log.Fatal(err.Error(), nil)
 	}
 
 	defer db.Close()

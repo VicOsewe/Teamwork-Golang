@@ -15,7 +15,7 @@ func NewUserRepository(database *gorm.DB) UserRepository {
 	return UserRepository{database}
 }
 
-func (repo UserRepository) CreateUser(user registering.Users) error {
+func (repo UserRepository) CreateUser(user registering.Users) (userID uuid.UUID, erro error) {
 	User := User{
 		ID:         newUUID(),
 		Firstname:  user.Firstname,
@@ -28,12 +28,11 @@ func (repo UserRepository) CreateUser(user registering.Users) error {
 		Address:    user.Address,
 	}
 
-	return repo.db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(&User).Error; err != nil {
-			return err
-		}
-		return nil
-	})
+	if err := repo.db.Create(&User).Error; err != nil {
+		return uuid.Nil, err
+	}
+	return User.ID, nil
+
 }
 
 func newUUID() uuid.UUID {

@@ -3,14 +3,16 @@ package registering
 import (
 	"errors"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 type RegisterService interface {
-	CreateUser(user Users) error
+	CreateUser(user Users) (userId uuid.UUID, erro error)
 }
 
 type RegisterRepository interface {
-	CreateUser(user Users) error
+	CreateUser(user Users) (userId uuid.UUID, erro error)
 }
 
 type RegisteringError struct {
@@ -35,18 +37,19 @@ func NewRegisteringService(r RegisterRepository) RegisterService {
 	}
 }
 
-func (s *service) CreateUser(user Users) error {
+func (s *service) CreateUser(user Users) (userID uuid.UUID, erro error) {
 	regError := RegisteringError{}
 	err := s.validateUserInfo(user)
 	if err != nil {
-		regError.add("Invalid user info  " + err.Error())
-		return &regError
+		regError.add("Invalid user info" + err.Error())
+		return uuid.Nil, &regError
 	}
-	errUser := s.repo.CreateUser(user)
+	UserID, errUser := s.repo.CreateUser(user)
 	if errUser != nil {
 		regError.add("Failed to add user to the database" + err.Error())
+		return uuid.Nil, &regError
 	}
-	return nil
+	return UserID, nil
 
 }
 

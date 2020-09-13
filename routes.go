@@ -8,6 +8,6 @@ import (
 
 func initializeRoutes(route *mux.Router, s services) {
 
-	route.HandleFunc("/teamwork/user", api.CreateUser(s.registering)).Methods("POST")
+	route.HandleFunc("/auth/user", api.CreateUser(s.registering)).Methods("POST")
 
 }
