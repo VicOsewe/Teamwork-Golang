@@ -39,7 +39,7 @@ func (s *service) CreateUser(user Users) error {
 	regError := RegisteringError{}
 	err := s.validateUserInfo(user)
 	if err != nil {
-		regError.add("Invalid user info" + err.Error())
+		regError.add("Invalid user info  " + err.Error())
 		return &regError
 	}
 	errUser := s.repo.CreateUser(user)
