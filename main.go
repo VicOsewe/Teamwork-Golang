@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Teamwork-Golang/getting"
 	"log"
 	"net/http"
 
@@ -15,7 +16,7 @@ import (
 
 func main() {
 
-	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=teamwork sslmode=disable password=felixotieno")
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=db sslmode=disable password=password")
 
 	if err != nil {
 		log.Fatal(err.Error(), nil)
@@ -31,11 +32,13 @@ func main() {
 
 type services struct {
 	registering registering.RegisterService
+	getting     getting.GettingService
 }
 
 func initializeServices(db *gorm.DB) services {
 	dbrepo := data.NewUserRepository(db)
 	s := services{}
 	s.registering = registering.NewRegisteringService(dbrepo)
+	s.getting = getting.NewGettingService(dbrepo)
 	return s
 }

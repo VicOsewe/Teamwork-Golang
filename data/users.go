@@ -17,3 +17,4 @@ type User struct {
 func (User) TableName() string {
 	return "public.users"
 }
+

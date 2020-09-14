@@ -9,5 +9,6 @@ import (
 func initializeRoutes(route *mux.Router, s services) {
 
 	route.HandleFunc("/auth/user", api.CreateUser(s.registering)).Methods("POST")
+	route.HandleFunc("/auth/signin", api.UserSignIn(s.getting)).Methods("POST")
 
 }

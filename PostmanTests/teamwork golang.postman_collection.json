@@ -27,7 +27,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstname\" :\"Vic\",\r\n    \"lastname\": \"osewe\",\r\n    \"email\": \"victorineosewe@gmail.com\",\r\n    \"gender\": \"Female\"\r\n}",
+					"raw": "{\r\n    \"firstname\" :\"Hilan\",\r\n    \"lastname\": \"ose\",\r\n    \"email\": \"hildaanyango@gmail.com\",\r\n    \"gender\": \"Female\",\r\n    \"password\": \"mine\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -35,15 +35,58 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:2000/teamwork/user",
+					"raw": "http://localhost:2000/auth/user",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "2000",
 					"path": [
-						"teamwork",
+						"auth",
 						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sign in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bc0ff3fc-f5e4-4d7c-833a-831e828d1053",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"hildaanyango@gmail.com\",\r\n    \"password\" : \"mine\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:2000/auth/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "2000",
+					"path": [
+						"auth",
+						"signin"
 					]
 				}
 			},
