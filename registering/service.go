@@ -3,16 +3,19 @@ package registering
 import (
 	"errors"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 )
 
 type RegisterService interface {
-	CreateUser(user Users) (userId uuid.UUID, erro error)
+	CreateUser(user Users) (userID uuid.UUID, erro error)
+	CreateArticle(art Article) (articleID uuid.UUID, createdAt time.Time, erro error)
 }
 
 type RegisterRepository interface {
 	CreateUser(user Users) (userId uuid.UUID, erro error)
+	CreateArticle(art Article) (articleID uuid.UUID, createdAt time.Time, erro error)
 }
 
 type RegisteringError struct {
@@ -54,12 +57,40 @@ func (s *service) CreateUser(user Users) (userID uuid.UUID, erro error) {
 
 }
 
+func (s *service) CreateArticle(art Article) (ArticleID uuid.UUID, CreatedAt time.Time, erro error) {
+
+	var regError RegisteringError
+	create := time.Now()
+	err := s.validateArticleInfo(art)
+	if err != nil {
+		regError.add("Info not provided for:" + err.Error())
+		return uuid.Nil, create, &regError
+	}
+	articleID, createdAt, errro := s.repo.CreateArticle(art)
+	if errro != nil {
+		regError.add("Article not created:" + err.Error())
+		return uuid.Nil, create, &regError
+	}
+	return articleID, createdAt, nil
+
+}
+
 func (s *service) validateUserInfo(user Users) error {
 	if len(user.Firstname+user.Lastname) == 0 {
 		return errors.New("Missing user name")
 	}
 	if len(user.Password) == 0 {
 		return errors.New("Please provide a password")
+	}
+	return nil
+}
+
+func (s *service) validateArticleInfo(art Article) error {
+	if len(art.Title) == 0 {
+		return errors.New("Article must have a title")
+	}
+	if len(art.Article) == 0 {
+		return errors.New("Please provide an article body")
 	}
 	return nil
 }

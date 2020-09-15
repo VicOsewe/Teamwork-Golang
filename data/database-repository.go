@@ -58,7 +58,6 @@ func (repo UserRepository) UserSignIn(user getting.UserSignInfo) error {
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(userDetails.Password), []byte(user.Password)); err != nil {
 		// If the two passwords don't match, return a 401 status
-		// w.WriteHeader(http.StatusUnauthorized)
 		return err
 	}
 	return nil
