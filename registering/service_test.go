@@ -3,6 +3,7 @@ package registering
 import (
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/google/uuid"
 
@@ -23,6 +24,16 @@ type RegisteringTestSuite struct {
 func (m *mockUserRepo) CreateUser(user Users) (uuid.UUID, error) {
 	args := m.Called(user)
 	return args.Get(0).(uuid.UUID), args.Error(1)
+}
+
+func (m *mockUserRepo) UserSignIn(user UserSignInfo) error {
+	args := m.Called(user)
+	return args.Error(0)
+}
+
+func (m *mockUserRepo) CreateArticle(art Article) (articleID uuid.UUID, createdAt time.Time, erro error) {
+	args := m.Called(art)
+	return args.Get(0).(uuid.UUID), args.Get(1).(time.Time), args.Error(2)
 }
 
 func (s *RegisteringTestSuite) SetupTest() {
@@ -49,7 +60,7 @@ func (s *RegisteringTestSuite) TestUserCreationSuccess() {
 	s.repo.AssertCalled(s.T(), "CreateUser", user)
 }
 
-func (s *RegisteringTestSuite) TestUserCreationFailure() {
+func (s *RegisteringTestSuite) TestUserCreationValidateFailure() {
 
 	userInfo := Users{}
 	userInfo.Firstname = ""
@@ -72,9 +83,34 @@ func (s *RegisteringTestSuite) TestCreateUserDatabaseFailure() {
 	s.repo.AssertCalled(s.T(), "CreateUser", user)
 }
 
+func (s *RegisteringTestSuite) TestUserSignInSuccess() {
+	signInfo := fakeSignInfo()
+	s.repo.On("UserSignIn", mock.Anything).Return(nil)
+	err := s.service.UserSignIn(signInfo)
+	s.Nil(err)
+	s.repo.AssertCalled(s.T(), "UserSignIn", signInfo)
+}
+
+func (s *RegisteringTestSuite) TestUserSignInValidateFailure() {
+	signInfo := UserSignInfo{}
+	signInfo.Email = ""
+	signInfo.Password = ""
+	err := s.service.UserSignIn(signInfo)
+	s.NotNil(err)
+	s.repo.AssertNotCalled(s.T(), "UserSignIn", signInfo)
+}
+
 func fakeUserInfo() Users {
 	return Users{
 		Firstname: "Jane",
 		Lastname:  "Doe",
+		Password:  "MyPassword",
+	}
+}
+
+func fakeSignInfo() UserSignInfo {
+	return UserSignInfo{
+		Email:    "example@gmail.com",
+		Password: "MyPassword",
 	}
 }
