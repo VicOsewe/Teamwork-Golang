@@ -10,3 +10,8 @@ type Users struct {
 	Department string `json:"department"`
 	Address    string `json:"address"`
 }
+
+type Article struct {
+	Title   string `json:"title"`
+	Article string `json:"article"`
+}
