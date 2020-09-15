@@ -1,7 +1,6 @@
 package api
 
 import (
-	"Teamwork-Golang/getting"
 	"Teamwork-Golang/registering"
 
 	"encoding/json"
@@ -32,9 +31,9 @@ func CreateUser(service registering.RegisterService) func(w http.ResponseWriter,
 	}
 }
 
-func UserSignIn(service getting.GettingService) func(w http.ResponseWriter, r *http.Request) {
+func UserSignIn(service registering.RegisterService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		userinfo := getting.UserSignInfo{}
+		userinfo := registering.UserSignInfo{}
 		err := json.NewDecoder(r.Body).Decode(&userinfo)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)

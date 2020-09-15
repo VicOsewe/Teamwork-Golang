@@ -10,11 +10,13 @@ import (
 
 type RegisterService interface {
 	CreateUser(user Users) (userID uuid.UUID, erro error)
+	UserSignIn(user UserSignInfo) error
 	CreateArticle(art Article) (articleID uuid.UUID, createdAt time.Time, erro error)
 }
 
 type RegisterRepository interface {
 	CreateUser(user Users) (userId uuid.UUID, erro error)
+	UserSignIn(user UserSignInfo) error
 	CreateArticle(art Article) (articleID uuid.UUID, createdAt time.Time, erro error)
 }
 
@@ -55,6 +57,33 @@ func (s *service) CreateUser(user Users) (userID uuid.UUID, erro error) {
 
 	return UserID, nil
 
+}
+
+func (s *service) UserSignIn(user UserSignInfo) error {
+	var getError RegisteringError
+	err := s.validateSignInInfo(user)
+	if err != nil {
+		getError.add("user log info not provided " + err.Error())
+	}
+
+	erro := s.repo.UserSignIn(user)
+	if erro != nil {
+		getError.add("user cannot login")
+		return &getError
+	}
+	return nil
+
+}
+
+func (s *service) validateSignInInfo(user UserSignInfo) error {
+	if len(user.Email) == 0 {
+		return errors.New("Email not provided")
+	}
+
+	if len(user.Password) == 0 {
+		return errors.New("Password not provided")
+	}
+	return nil
 }
 
 func (s *service) CreateArticle(art Article) (ArticleID uuid.UUID, CreatedAt time.Time, erro error) {

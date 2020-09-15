@@ -2,8 +2,7 @@ package data
 
 import (
 	"Teamwork-Golang/registering"
-
-	"Teamwork-Golang/getting"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
@@ -50,7 +49,7 @@ func newUUID() uuid.UUID {
 	return uuid
 }
 
-func (repo UserRepository) UserSignIn(user getting.UserSignInfo) error {
+func (repo UserRepository) UserSignIn(user registering.UserSignInfo) error {
 
 	userDetails := User{}
 	if err := repo.db.Where("email = ?", user.Email).First(&userDetails).Error; err != nil {
@@ -61,5 +60,9 @@ func (repo UserRepository) UserSignIn(user getting.UserSignInfo) error {
 		return err
 	}
 	return nil
+
+}
+
+func (repo UserRepository) CreateArticle(art Article) (ArticleID uuid.UUID, CreatedAt time.Time, erro error) {
 
 }
