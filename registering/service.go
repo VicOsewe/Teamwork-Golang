@@ -64,6 +64,7 @@ func (s *service) UserSignIn(user UserSignInfo) error {
 	err := s.validateSignInInfo(user)
 	if err != nil {
 		getError.add("user log info not provided " + err.Error())
+		return err
 	}
 
 	erro := s.repo.UserSignIn(user)
@@ -73,17 +74,6 @@ func (s *service) UserSignIn(user UserSignInfo) error {
 	}
 	return nil
 
-}
-
-func (s *service) validateSignInInfo(user UserSignInfo) error {
-	if len(user.Email) == 0 {
-		return errors.New("Email not provided")
-	}
-
-	if len(user.Password) == 0 {
-		return errors.New("Password not provided")
-	}
-	return nil
 }
 
 func (s *service) CreateArticle(art Article) (ArticleID uuid.UUID, CreatedAt time.Time, erro error) {
@@ -120,6 +110,17 @@ func (s *service) validateArticleInfo(art Article) error {
 	}
 	if len(art.Article) == 0 {
 		return errors.New("Please provide an article body")
+	}
+	return nil
+}
+
+func (s *service) validateSignInInfo(user UserSignInfo) error {
+	if len(user.Email) == 0 {
+		return errors.New("Email not provided")
+	}
+
+	if len(user.Password) == 0 {
+		return errors.New("Password not provided")
 	}
 	return nil
 }
