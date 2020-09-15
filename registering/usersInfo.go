@@ -15,3 +15,8 @@ type Article struct {
 	Title   string `json:"title"`
 	Article string `json:"article"`
 }
+
+type UserSignInfo struct {
+	Email    string `json:"username"`
+	Password string `json:"password"`
+}

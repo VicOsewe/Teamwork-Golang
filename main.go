@@ -1,7 +1,6 @@
 package main
 
 import (
-	"Teamwork-Golang/getting"
 	"log"
 	"net/http"
 
@@ -32,13 +31,13 @@ func main() {
 
 type services struct {
 	registering registering.RegisterService
-	getting     getting.GettingService
+	// getting     getting.GettingService
 }
 
 func initializeServices(db *gorm.DB) services {
 	dbrepo := data.NewUserRepository(db)
 	s := services{}
 	s.registering = registering.NewRegisteringService(dbrepo)
-	s.getting = getting.NewGettingService(dbrepo)
+	// s.getting = getting.NewGettingService(dbrepo)
 	return s
 }
