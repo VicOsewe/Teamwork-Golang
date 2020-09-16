@@ -63,6 +63,17 @@ func (repo UserRepository) UserSignIn(user registering.UserSignInfo) error {
 
 }
 
-func (repo UserRepository) CreateArticle(art Article) (ArticleID uuid.UUID, CreatedAt time.Time, erro error) {
+func (repo UserRepository) CreateArticle(art registering.Article) (ArticleID uuid.UUID, CreatedAt time.Time, articleTitle string, erro error) {
+	article := Article{
+		ID:          newUUID(),
+		Title:       art.Title,
+		Article:     art.Article,
+		DateCreated: time.Now(),
+	}
+	timecreated := time.Now()
+	if err := repo.db.Create(&article).Error; err != nil {
+		return uuid.Nil, timecreated, article.Title, err
+	}
+	return article.ID, article.DateCreated, article.Title, nil
 
 }

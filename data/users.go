@@ -1,6 +1,10 @@
 package data
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type User struct {
 	ID         uuid.UUID `gorm:"column:id"`
@@ -18,3 +22,14 @@ func (User) TableName() string {
 	return "public.users"
 }
 
+type Article struct {
+	ID              uuid.UUID `gorm:"column:id"`
+	Title           string    `gorm:"column:title"`
+	Article         string    `gorm:"column:article"`
+	DateCreated     time.Time `gorm:"column:date_created"`
+	DateLastUpdated time.Time `gorm:"column:date_last_updated"`
+}
+
+func (Article) TableName() string {
+	return "public.article"
+}
