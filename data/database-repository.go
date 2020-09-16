@@ -1,7 +1,7 @@
 package data
 
 import (
-	"Teamwork-Golang/registering"
+	"Teamwork-Golang/creating"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,7 +17,7 @@ func NewUserRepository(database *gorm.DB) UserRepository {
 	return UserRepository{database}
 }
 
-func (repo UserRepository) CreateUser(user registering.Users) (userID uuid.UUID, erro error) {
+func (repo UserRepository) CreateUser(user creating.Users) (userID uuid.UUID, erro error) {
 	// Salt and hash the password using the bcrypt algorithm
 	// The second argument is the cost of hashing, which we arbitrarily set as 8 (this value can be more or less, depending on the computing power you wish to utilize)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 8)
@@ -49,7 +49,7 @@ func newUUID() uuid.UUID {
 	return uuid
 }
 
-func (repo UserRepository) UserSignIn(user registering.UserSignInfo) error {
+func (repo UserRepository) UserSignIn(user creating.UserSignInfo) error {
 
 	userDetails := User{}
 	if err := repo.db.Where("email = ?", user.Email).First(&userDetails).Error; err != nil {
@@ -63,7 +63,7 @@ func (repo UserRepository) UserSignIn(user registering.UserSignInfo) error {
 
 }
 
-func (repo UserRepository) CreateArticle(art registering.Article) (ArticleID uuid.UUID, CreatedAt time.Time, articleTitle string, erro error) {
+func (repo UserRepository) CreateArticle(art creating.Article) (ArticleID uuid.UUID, CreatedAt time.Time, articleTitle string, erro error) {
 	article := Article{
 		ID:          newUUID(),
 		Title:       art.Title,

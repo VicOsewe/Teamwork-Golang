@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"Teamwork-Golang/creating"
 	"Teamwork-Golang/data"
-	"Teamwork-Golang/registering"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -30,14 +30,14 @@ func main() {
 }
 
 type services struct {
-	registering registering.RegisterService
+	creating creating.CreatingService
 	// getting     getting.GettingService
 }
 
 func initializeServices(db *gorm.DB) services {
 	dbrepo := data.NewUserRepository(db)
 	s := services{}
-	s.registering = registering.NewRegisteringService(dbrepo)
+	s.creating = creating.NewcreatingService(dbrepo)
 	// s.getting = getting.NewGettingService(dbrepo)
 	return s
 }

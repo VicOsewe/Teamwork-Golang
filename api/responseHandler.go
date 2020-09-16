@@ -1,7 +1,7 @@
 package api
 
 import (
-	"Teamwork-Golang/registering"
+	"Teamwork-Golang/creating"
 	"encoding/json"
 	"net/http"
 	"strings"
@@ -46,9 +46,9 @@ func writeError(w http.ResponseWriter, err error, data interface{}) {
 
 	// depending on the type of the error...
 	switch err.(type) {
-	// if it is a custom error from the registering service,
-	// set the status 400 with the custom errors in the response body...
-	case *registering.RegisteringError:
+	// if it is a custom error from the creating service,
+	// set the status 400 with the custom errors in the response body...ss
+	case *creating.CreatingError:
 		w.WriteHeader(http.StatusBadRequest)
 		resp.Errors = strings.Split(err.Error(), ",")
 	// otherwise, send back a generic internal server error 500 with new error
