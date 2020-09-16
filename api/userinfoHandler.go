@@ -46,3 +46,21 @@ func UserSignIn(service registering.RegisterService) func(w http.ResponseWriter,
 		}
 	}
 }
+
+func CreateArticle(service registering.RegisterService) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		article := registering.Article{}
+		err := json.NewDecoder(r.Body).Decode(&article)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		articleID, timeCreated, articleTitle, erro := service.CreateArticle(article)
+		if erro != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		var response = articleResponse{"Success", "Article successfully posted", articleID, timeCreated, articleTitle, make([]string, 0)}
+		writeJSON(w, response)
+	}
+}
