@@ -1,4 +1,4 @@
-package registering
+package creating
 
 type Users struct {
 	Firstname  string `json:"firstname"`

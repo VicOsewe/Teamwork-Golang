@@ -1,16 +1,16 @@
 package api
 
 import (
-	"Teamwork-Golang/registering"
+	"Teamwork-Golang/creating"
 
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 )
 
-func CreateUser(service registering.RegisterService) func(w http.ResponseWriter, r *http.Request) {
+func CreateUser(service creating.CreatingService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		user := registering.Users{}
+		user := creating.Users{}
 		// read the request body into byte slice
 		requestBody, _ := ioutil.ReadAll(r.Body)
 		// parse the body into the user slice, handle any errors
@@ -18,7 +18,7 @@ func CreateUser(service registering.RegisterService) func(w http.ResponseWriter,
 			writeError(w, err, string(requestBody))
 			return
 		}
-		// send user slice to the registering service, handle any errors
+		// send user slice to the creating service, handle any errors
 		UserID, err := service.CreateUser(user)
 		if err != nil {
 			writeError(w, err, user)
@@ -31,9 +31,9 @@ func CreateUser(service registering.RegisterService) func(w http.ResponseWriter,
 	}
 }
 
-func UserSignIn(service registering.RegisterService) func(w http.ResponseWriter, r *http.Request) {
+func UserSignIn(service creating.CreatingService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		userinfo := registering.UserSignInfo{}
+		userinfo := creating.UserSignInfo{}
 		err := json.NewDecoder(r.Body).Decode(&userinfo)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -47,9 +47,9 @@ func UserSignIn(service registering.RegisterService) func(w http.ResponseWriter,
 	}
 }
 
-func CreateArticle(service registering.RegisterService) func(w http.ResponseWriter, r *http.Request) {
+func CreateArticle(service creating.CreatingService) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		article := registering.Article{}
+		article := creating.Article{}
 		err := json.NewDecoder(r.Body).Decode(&article)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)

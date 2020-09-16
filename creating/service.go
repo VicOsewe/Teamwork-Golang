@@ -1,4 +1,4 @@
-package registering
+package creating
 
 import (
 	"errors"
@@ -8,42 +8,42 @@ import (
 	"github.com/google/uuid"
 )
 
-type RegisterService interface {
+type CreatingService interface {
 	CreateUser(user Users) (userID uuid.UUID, erro error)
 	UserSignIn(user UserSignInfo) error
 	CreateArticle(art Article) (articleID uuid.UUID, createdAt time.Time, articleTitle string, erro error)
 }
 
-type RegisterRepository interface {
+type CreatingRepository interface {
 	CreateUser(user Users) (userId uuid.UUID, erro error)
 	UserSignIn(user UserSignInfo) error
 	CreateArticle(art Article) (articleID uuid.UUID, createdAt time.Time, articleTitle string, erro error)
 }
 
-type RegisteringError struct {
+type CreatingError struct {
 	errorList []string
 }
 
-func (e *RegisteringError) add(message string) {
+func (e *CreatingError) add(message string) {
 	e.errorList = append(e.errorList, message)
 }
 
-func (e *RegisteringError) Error() string {
+func (e *CreatingError) Error() string {
 	return strings.Join(e.errorList, ", ")
 }
 
 type service struct {
-	repo RegisterRepository
+	repo CreatingRepository
 }
 
-func NewRegisteringService(r RegisterRepository) RegisterService {
+func NewcreatingService(r CreatingRepository) CreatingService {
 	return &service{
 		repo: r,
 	}
 }
 
 func (s *service) CreateUser(user Users) (userID uuid.UUID, erro error) {
-	var regError RegisteringError
+	var regError CreatingError
 	err := s.validateUserInfo(user)
 	if err != nil {
 		regError.add("Invalid user info " + err.Error())
@@ -60,7 +60,7 @@ func (s *service) CreateUser(user Users) (userID uuid.UUID, erro error) {
 }
 
 func (s *service) UserSignIn(user UserSignInfo) error {
-	var getError RegisteringError
+	var getError CreatingError
 	err := s.validateSignInInfo(user)
 	if err != nil {
 		getError.add("user log info not provided " + err.Error())
@@ -78,7 +78,7 @@ func (s *service) UserSignIn(user UserSignInfo) error {
 
 func (s *service) CreateArticle(art Article) (ArticleID uuid.UUID, CreatedAt time.Time, articleTitle string, erro error) {
 
-	var regError RegisteringError
+	var regError CreatingError
 	create := time.Now()
 	err := s.validateArticleInfo(art)
 	if err != nil {
@@ -87,8 +87,8 @@ func (s *service) CreateArticle(art Article) (ArticleID uuid.UUID, CreatedAt tim
 	}
 	articleID, createdAt, articleTitle, errro := s.repo.CreateArticle(art)
 	if errro != nil {
-		regError.add("Article not created:" + err.Error())
-		return uuid.Nil, create, art.Title, &regError
+		regError.add("Article not created")
+		return articleID, create, art.Title, &regError
 	}
 	return articleID, createdAt, articleTitle, nil
 
