@@ -28,6 +28,14 @@ type articleResponse struct {
 	Errors       []string
 }
 
+type articleUpdateResponse struct {
+	Status  string
+	Message string
+	Title   string
+	Errors  []string
+	// Article string
+}
+
 func writeJSON(w http.ResponseWriter, resp interface{}) {
 	// set the appropriate headers
 	w.Header().Add("Content-Type", "application/json")
