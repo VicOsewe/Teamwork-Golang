@@ -2,6 +2,7 @@ package api
 
 import (
 	"Teamwork-Golang/creating"
+	"Teamwork-Golang/updating"
 
 	"encoding/json"
 	"io/ioutil"
@@ -62,5 +63,25 @@ func CreateArticle(service creating.CreatingService) func(w http.ResponseWriter,
 		}
 		var response = articleResponse{"Success", "Article successfully posted", articleID, timeCreated, articleTitle, make([]string, 0)}
 		writeJSON(w, response)
+	}
+}
+
+func UpdateArticle(service updating.UpdateService) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		update := updating.UpdateAtricle{}
+		err := json.NewDecoder(r.Body).Decode(&update)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		articleTitle, message, err := service.UpdateArticle(update)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		var resp = articleUpdateResponse{"success", message, articleTitle, make([]string, 0)}
+		writeJSON(w, resp)
+
 	}
 }

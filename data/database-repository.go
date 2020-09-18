@@ -2,6 +2,7 @@ package data
 
 import (
 	"Teamwork-Golang/creating"
+	"Teamwork-Golang/updating"
 	"time"
 
 	"github.com/google/uuid"
@@ -75,5 +76,16 @@ func (repo UserRepository) CreateArticle(art creating.Article) (ArticleID uuid.U
 		return uuid.Nil, timecreated, article.Title, err
 	}
 	return article.ID, article.DateCreated, article.Title, nil
+
+}
+
+func (repo UserRepository) UpdateArticle(art updating.UpdateAtricle) (articleTitle string, message string, err error) {
+	article := Article{}
+
+	timecreated := time.Now()
+	if err := repo.db.Debug().Model(&article).Where(Article{ID: art.ArticleID}).Find(&article).Update(Article{Title: art.Title, Article: art.Message, DateLastUpdated: timecreated}).Error; err != nil {
+		return art.Title, art.Message, err
+	}
+	return art.Title, art.Message, nil
 
 }
