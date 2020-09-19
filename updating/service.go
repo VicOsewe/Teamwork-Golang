@@ -34,8 +34,8 @@ func NewUpdatingService(r UpdateRepository) UpdateService {
 
 func (s *service) UpdateArticle(art UpdateAtricle) (articleTitle string, message string, err error) {
 	var updateErr UpdateError
-	if len(art.ArticleID) == 0 {
-		updateErr.add("Article ID not provided ")
+	if len(art.Message) == 0 {
+		updateErr.add("Message not provided ")
 		return art.Title, art.Message, &updateErr
 	}
 
