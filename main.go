@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Teamwork-Golang/deleting"
 	"Teamwork-Golang/updating"
 	"log"
 	"net/http"
@@ -33,6 +34,7 @@ func main() {
 type services struct {
 	creating creating.CreatingService
 	updating updating.UpdateService
+	deleting deleting.DeleteService
 	// getting     getting.GettingService
 }
 
@@ -41,5 +43,6 @@ func initializeServices(db *gorm.DB) services {
 	s := services{}
 	s.creating = creating.NewcreatingService(dbrepo)
 	s.updating = updating.NewUpdatingService(dbrepo)
+	s.deleting = deleting.NewDeletingService(dbrepo)
 	return s
 }

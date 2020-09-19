@@ -12,5 +12,6 @@ func initializeRoutes(route *mux.Router, s services) {
 	route.HandleFunc("/auth/signin", api.UserSignIn(s.creating)).Methods("POST")
 	route.HandleFunc("/articles", api.CreateArticle(s.creating)).Methods("POST")
 	route.HandleFunc("/articles", api.UpdateArticle(s.updating))
+	route.HandleFunc("/articles/delete", api.DeleteArticle(s.deleting)).Methods("DELETE")
 
 }

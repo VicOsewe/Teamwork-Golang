@@ -2,6 +2,7 @@ package api
 
 import (
 	"Teamwork-Golang/creating"
+	"Teamwork-Golang/deleting"
 	"Teamwork-Golang/updating"
 
 	"encoding/json"
@@ -81,6 +82,26 @@ func UpdateArticle(service updating.UpdateService) func(w http.ResponseWriter, r
 		}
 
 		var resp = articleUpdateResponse{"success", message, articleTitle, make([]string, 0)}
+		writeJSON(w, resp)
+
+	}
+}
+
+func DeleteArticle(service deleting.DeleteService) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		delete := deleting.DeleteArt{}
+		err := json.NewDecoder(r.Body).Decode(&delete)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		erro := service.DeleteArticle(delete)
+		if erro != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		var resp = deletingUpdateResponse{"success", "article successfully deleted"}
 		writeJSON(w, resp)
 
 	}
