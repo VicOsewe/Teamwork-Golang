@@ -36,6 +36,11 @@ type articleUpdateResponse struct {
 	// Article string
 }
 
+type deletingUpdateResponse struct {
+	status  string
+	message string
+}
+
 func writeJSON(w http.ResponseWriter, resp interface{}) {
 	// set the appropriate headers
 	w.Header().Add("Content-Type", "application/json")

@@ -2,6 +2,7 @@ package data
 
 import (
 	"Teamwork-Golang/creating"
+	"Teamwork-Golang/deleting"
 	"Teamwork-Golang/updating"
 	"time"
 
@@ -88,4 +89,14 @@ func (repo UserRepository) UpdateArticle(art updating.UpdateAtricle) (articleTit
 	}
 	return art.Title, art.Message, nil
 
+}
+
+func (repo UserRepository) DeleteArticle(ID deleting.DeleteArt) error {
+	article := Article{}
+
+	if err := repo.db.Debug().Model(&article).Where(Article{ID: ID.ArticleID}).Find(&article).Delete(&article).Error; err != nil {
+		return err
+
+	}
+	return nil
 }
