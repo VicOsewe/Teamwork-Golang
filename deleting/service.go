@@ -34,10 +34,6 @@ func NewDeletingService(r DeleteRepository) DeleteService {
 
 func (s *service) DeleteArticle(ID DeleteArt) error {
 	var deleteErr DeleteError
-	if len(ID.ArticleID) == 0 {
-		deleteErr.add("Article ID not provided ")
-		return &deleteErr
-	}
 
 	err := s.repo.DeleteArticle(ID)
 	if err != nil {
